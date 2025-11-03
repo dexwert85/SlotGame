@@ -30,6 +30,8 @@ public class MainActivity extends AppCompatActivity {
     private  Runnable runnable;
     private boolean[] found;
     private Intent scoreIn;
+    private boolean tries = false;
+    private int tryCount = 0;
 
     private void startSpining() {
         handler.post(runnable);
@@ -85,29 +87,35 @@ public class MainActivity extends AppCompatActivity {
         btnStartStop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!isSpining) {
-                    btnStartStop.setText("Stop");
-                    btnStartStop.setBackgroundColor(Color.RED);
-                    startSpining();
-                } else {
-                    btnStartStop.setText("Start");
-                    btnStartStop.setBackgroundColor(Color.GREEN);
-                    StopSpining();
-                    num = Integer.parseInt(tvWheel.getText().toString());
-                    for (int i = 0; i < n.length; i++) {
-                        if (num == n[i]) {
-                            if (!found[i]) {
-                                score++;
-                                cor++;
-                                tvN[i].setBackgroundColor(Color.RED);
-                                tvScore.setText(score + " of 6");
-                                found[i] = true;
+                if (!tries) {
+                    if (!isSpining) {
+                        btnStartStop.setText("Stop");
+                        btnStartStop.setBackgroundColor(Color.RED);
+                        startSpining();
+                    } else {
+                        btnStartStop.setText("Start");
+                        btnStartStop.setBackgroundColor(Color.GREEN);
+                        StopSpining();
+                        num = Integer.parseInt(tvWheel.getText().toString());
+                        for (int i = 0; i < n.length; i++) {
+                            if (num == n[i]) {
+                                if (!found[i]) {
+                                    score++;
+                                    cor++;
+                                    tvN[i].setBackgroundColor(Color.RED);
+                                    tvScore.setText(score + " of 6");
+                                    found[i] = true;
+                                }
                             }
                         }
                     }
-                }
 
-                isSpining = !isSpining;
+                    isSpining = !isSpining;
+                    tryCount++;
+                    if (tryCount == 12) {
+                        tries = true;
+                    }
+                }
             }
         });
 
