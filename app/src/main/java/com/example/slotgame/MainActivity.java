@@ -131,6 +131,8 @@ public class MainActivity extends AppCompatActivity {
                 tvScore.setText(score + " of 6");
                 tvWheel.setText("0");
                 gameCount++;
+                tries = false;
+                tryCount = 0;
             }
         });
 
