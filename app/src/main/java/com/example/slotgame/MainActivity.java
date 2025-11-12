@@ -125,6 +125,7 @@ public class MainActivity extends AppCompatActivity {
                 for (int i = 0; i < n.length; i++) {
                     n[i] = (int)(Math.random() * (39)) + 1;
                     tvN[i].setText(n[i] + "");
+                    tvN[i].setBackgroundColor(Color.WHITE);
                 }
 
                 score = 0;
