@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.Looper;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.os.Handler;
 import android.widget.Toast;
@@ -20,6 +21,7 @@ import com.google.android.material.color.utilities.Score;
 
 public class MainActivity extends AppCompatActivity {
     private TextView[] tvN;
+    private EditText etName;
     private int[] n;
     private int num, score;
     public static int gameCount = 0, cor = 0;
@@ -53,6 +55,8 @@ public class MainActivity extends AppCompatActivity {
         tvN[3] = findViewById(R.id.n4);
         tvN[4] = findViewById(R.id.n5);
         tvN[5] = findViewById(R.id.n6);
+
+        etName = findViewById(R.id.name);
 
         tvWheel = findViewById(R.id.wheel);
         tvScore = findViewById(R.id.score);
@@ -140,6 +144,8 @@ public class MainActivity extends AppCompatActivity {
         btnScore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                String name = etName.getText().toString();
+                scoreIn.putExtra("NAME", name);
                 startActivity(scoreIn);
             }
         });
