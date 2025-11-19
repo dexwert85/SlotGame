@@ -1,5 +1,6 @@
 package com.example.slotgame;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -12,6 +13,7 @@ import android.os.Handler;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -26,14 +28,15 @@ public class MainActivity extends AppCompatActivity {
     private int num, score;
     public static int gameCount = 0, cor = 0;
     private TextView  tvWheel, tvScore;
-    private Button btnStartStop, btnNewGame, btnScore;
-    private boolean isSpining = false;
+    private Button btnStartStop, btnNewGame, btnScore, btnExit;
+    private boolean isSpining;
     private Handler handler;
     private  Runnable runnable;
     private boolean[] found;
     private Intent scoreIn;
-    private boolean tries = false;
+    private boolean tries;
     private int tryCount = 0;
+    private AlertDialog dialog;
 
     private void startSpining() {
         handler.post(runnable);
@@ -43,11 +46,7 @@ public class MainActivity extends AppCompatActivity {
         handler.removeCallbacks(runnable);
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
+    private void initViews() {
         tvN = new TextView[6];
         tvN[0] = findViewById(R.id.n1);
         tvN[1] = findViewById(R.id.n2);
@@ -64,6 +63,7 @@ public class MainActivity extends AppCompatActivity {
         btnStartStop = findViewById(R.id.start_stop);
         btnNewGame = findViewById(R.id.new_game);
         btnScore = findViewById(R.id.ScoreActivityBtn);
+        btnExit = findViewById(R.id.exit);
 
         scoreIn = new Intent(MainActivity.this, ScoreActivity.class);
 
@@ -76,17 +76,68 @@ public class MainActivity extends AppCompatActivity {
                 handler.postDelayed(runnable, 100);
             }
         };
-
         found = new boolean[6];
+        n = new int[6];
+    }
+
+    private void buildDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Exit");
+        builder.setMessage("Do you want to Exit?");
+        builder.setIcon(R.drawable.alert);
+        builder.setCancelable(true);
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                finish();
+                System.exit(0);
+                dialogInterface.dismiss();
+            }
+        });
+        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        });
+        builder.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        });
+
+        dialog = builder.create();
+    }
+
+    private void setValuse() {
         for (int i = 0; i < found.length; i++) {
             found[i] = false;
         }
 
-        n = new int[6];
         for (int i = 0; i < n.length; i++) {
             n[i] = (int)(Math.random() * (39)) + 1;
             tvN[i].setText(n[i] + "");
+            tvN[i].setBackgroundColor(Color.WHITE);
         }
+
+        score = 0;
+        tvScore.setText(score + " of 6");
+        tvWheel.setText("0");
+        gameCount++;
+        tries = false;
+        tryCount = 0;
+        isSpining = false;
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        initViews();
+        setValuse();
+        buildDialog();
 
         btnStartStop.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -126,18 +177,7 @@ public class MainActivity extends AppCompatActivity {
         btnNewGame.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                for (int i = 0; i < n.length; i++) {
-                    n[i] = (int)(Math.random() * (39)) + 1;
-                    tvN[i].setText(n[i] + "");
-                    tvN[i].setBackgroundColor(Color.WHITE);
-                }
-
-                score = 0;
-                tvScore.setText(score + " of 6");
-                tvWheel.setText("0");
-                gameCount++;
-                tries = false;
-                tryCount = 0;
+                setValuse();
             }
         });
 
@@ -147,6 +187,14 @@ public class MainActivity extends AppCompatActivity {
                 String name = etName.getText().toString();
                 scoreIn.putExtra("NAME", name);
                 startActivity(scoreIn);
+                finish();
+            }
+        });
+
+        btnExit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.show();
             }
         });
     }

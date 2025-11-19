@@ -39,6 +39,7 @@ public class ScoreActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 startActivity(intent);
+                finish();
             }
         });
     }
