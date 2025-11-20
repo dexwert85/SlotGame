@@ -1,5 +1,6 @@
 package com.example.slotgame;
 
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -36,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
     private Intent scoreIn;
     private boolean tries;
     private int tryCount = 0;
-    private AlertDialog dialog;
+    private Dialog dialog;
 
     private void startSpining() {
         handler.post(runnable);
@@ -81,33 +82,27 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void buildDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Exit");
-        builder.setMessage("Do you want to Exit?");
-        builder.setIcon(R.drawable.alert);
-        builder.setCancelable(true);
-        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+        dialog = new Dialog(this);
+        dialog.setContentView(R.layout.exit_dialog);
+
+        Button btnYes = dialog.findViewById(R.id.positive);
+        btnYes.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
+            public void onClick(View view) {
                 finish();
                 System.exit(0);
-                dialogInterface.dismiss();
-            }
-        });
-        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.dismiss();
-            }
-        });
-        builder.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.dismiss();
+                dialog.dismiss();
             }
         });
 
-        dialog = builder.create();
+        Button btnNo = dialog.findViewById(R.id.negative);
+        btnNo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+        dialog.setCancelable(true);
     }
 
     private void setValuse() {
