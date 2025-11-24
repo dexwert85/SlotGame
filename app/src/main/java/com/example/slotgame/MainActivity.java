@@ -24,7 +24,7 @@ import com.google.android.material.color.utilities.Score;
 
 public class MainActivity extends AppCompatActivity {
     private TextView[] tvN;
-    private EditText etName;
+    private TextView tvName;
     private int[] n;
     private int num, score;
     public static int gameCount = 0, cor = 0;
@@ -37,7 +37,8 @@ public class MainActivity extends AppCompatActivity {
     private Intent scoreIn;
     private boolean tries;
     private int tryCount = 0;
-    private Dialog dialog;
+    private Dialog dialog, login;
+    private String nameAge;
 
     private void startSpining() {
         handler.post(runnable);
@@ -56,7 +57,8 @@ public class MainActivity extends AppCompatActivity {
         tvN[4] = findViewById(R.id.n5);
         tvN[5] = findViewById(R.id.n6);
 
-        etName = findViewById(R.id.name);
+        tvName = findViewById(R.id.name);
+
 
         tvWheel = findViewById(R.id.wheel);
         tvScore = findViewById(R.id.score);
@@ -103,6 +105,24 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         dialog.setCancelable(true);
+
+        login = new Dialog(this);
+        login.setContentView(R.layout.login);
+
+        EditText etName = login.findViewById(R.id.name);
+        EditText etAge = login.findViewById(R.id.age);
+        Button loginBtn = login.findViewById(R.id.loginBtn);
+
+        loginBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (!etName.getText().toString().isBlank() && !etAge.getText().toString().isBlank()) {
+                    nameAge = etName.getText().toString() + "\t" + etAge.getText().toString();
+                    tvName.setText(nameAge);
+                }
+                login.dismiss();
+            }
+        });
     }
 
     private void setValuse() {
@@ -133,6 +153,8 @@ public class MainActivity extends AppCompatActivity {
         initViews();
         setValuse();
         buildDialog();
+
+        login.show();
 
         btnStartStop.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -179,8 +201,7 @@ public class MainActivity extends AppCompatActivity {
         btnScore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String name = etName.getText().toString();
-                scoreIn.putExtra("NAME", name);
+                scoreIn.putExtra("NAME", nameAge.split("\t")[0]);
                 startActivity(scoreIn);
                 finish();
             }
