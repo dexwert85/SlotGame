@@ -119,8 +119,8 @@ public class MainActivity extends AppCompatActivity {
                 if (!etName.getText().toString().isBlank() && !etAge.getText().toString().isBlank()) {
                     nameAge = etName.getText().toString() + "\t" + etAge.getText().toString();
                     tvName.setText(nameAge);
+                    login.dismiss();
                 }
-                login.dismiss();
             }
         });
     }
